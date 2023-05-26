@@ -8,18 +8,30 @@ function App() {
   const [randomOfAdvise, setNumberOfAdvise] = useState(0);
   const [adviseContent, setAdviseContent] = useState('');
 
-  const makeModalOpen = () => {
+  const onOverlayClick = (e) => {
+    setOpenModal(false);
+    e.stopPropagation();
+  }
+
+  const makeModalOpen = (e) => {
     setOpenModal(true);
-    setNumberOfAdvise(Math.floor(Math.random() * advisesList.length));
-    setAdviseContent(advisesList[randomOfAdvise].advise)
+    let randomElemIndex =  Math.floor(Math.random() * advisesList.length);
+    setNumberOfAdvise(randomElemIndex);
+    setAdviseContent(advisesList[randomElemIndex].advise)
+    e.stopPropagation()
   };
 
   return (
-    <div className="App">
+    <div className="App" onClick={onOverlayClick}>
       <button className="modal-button" onClick={makeModalOpen}>
         Generate Advice
       </button>
-      <Modal openModal={openModal} randomOfAdvise={randomOfAdvise} adviseContent={adviseContent}/>
+      <Modal 
+        openModal={openModal} 
+        randomOfAdvise={randomOfAdvise} 
+        adviseContent={adviseContent}
+        setOpenModal={setOpenModal}
+      />
     </div>
   );
 }

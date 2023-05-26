@@ -25,18 +25,55 @@ body{
 }
 
 .modal-button:hover {
-  background: #76B5BC;;
+  background: #76B5BC;
 }
 
 .modal-wrapper {
   max-width: 600px;
-  width: 540px;
+  width: 600px;
   height: 340px;
   position: fixed;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
   background: #FFFBF6;
   border-radius: 20px;
+}
+
+.modal-wrapper .modal-content {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.modal-content .content-title {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+  color: #76B5BC;
+  padding: 48px  0;
+}
+
+.modal-content .content-text {
+  color: #EC755D;
+  font-weight: 700;
+}
+
+.close-modal-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;  
+  background-color: #B4E0E5;
+  border: transparent;
+  font-weight: 500;
+  font-size: 25px;
+  color: #fff;
+  position: fixed;
+  top: 90%;
+  left: 45%;
+  cursor: pointer;
+}
+
+.close-modal-btn:hover {
+  background-color: #FF9B86;
 }
