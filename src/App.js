@@ -1,54 +1,63 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import Modal from './components/Modal';
-import advisesList from './assets/advisesList';
-import axios from 'axios';
+import { getAdvice } from "./services/advice.service";
 
 function App() {
-  const [openModal, setOpenModal] = useState(false);
-  const [randomOfAdvise, setNumberOfAdvise] = useState(0);
+  const [openAdviceModal, setOpenAdviceModal] = useState(false);
+  const [isInfoModalActive, setInfoModalActive] = useState(false);
+  const [adviceId, setAdviceId] = useState(0);
   const [adviseContent, setAdviseContent] = useState('');
 
-  const gaveAdvise =  () => {
-    axios.get(`https://api.adviceslip.com/advice`)
-     .then(data => {
-       setNumberOfAdvise(data.data.slip.id)
-       setAdviseContent(data.data.slip.advice)
-     })
-    .catch(err => console.log(err))
+  const gaveAdvise = async () => {
+      try {
+          const data = await getAdvice()
+          setAdviceId(data.slip.id)
+          setAdviseContent(data.slip.advice)
+      } catch (e) {
+          console.log(e)
+      }
   }
 
-  useEffect(() => {
-    gaveAdvise();
- }, [])
+    useEffect(() => {
+        gaveAdvise()
+    }, [])
 
 
   const onOverlayClick = (e) => {
-    setOpenModal(false);
-    e.stopPropagation();
+      e.stopPropagation()
+      setOpenAdviceModal(false)
   }
 
-  const makeModalOpen = (e) => {
-    setOpenModal(true);
-    gaveAdvise()
-    //old solution
-    // let randomElemIndex =  Math.floor(Math.random() * advisesList.length);
-    // setNumberOfAdvise(randomElemIndex);
-    // setAdviseContent(advisesList[randomElemIndex].advise)
-    e.stopPropagation()
-  };
+  const makeModalOpen = async (e) => {
+      e.stopPropagation()
+      await gaveAdvise()
+      setOpenAdviceModal(true)
+  }
 
   return (
     <div className="App" onClick={onOverlayClick}>
-      <button className="modal-button" onClick={makeModalOpen}>
-        Generate Advice
-      </button>
-      <Modal 
-        openModal={openModal} 
-        randomOfAdvise={randomOfAdvise} 
-        adviseContent={adviseContent}
-        setOpenModal={setOpenModal}
-      />
+        <button className="modal-button" onClick={makeModalOpen}>
+            Generate Advice
+        </button>
+        <button className="modal-button" onClick={() => setInfoModalActive(true)}>
+            Open info modal
+        </button>
+        <Modal
+            openModal={openAdviceModal}
+            title={`ADVICE: ${adviceId}`}
+            setOpenModal={setOpenAdviceModal}
+        >
+            <p>{adviseContent}</p>
+        </Modal>
+
+        <Modal
+            openModal={isInfoModalActive}
+            title="Information about this project"
+            setOpenModal={() => setInfoModalActive(false)}
+        >
+            <p>Some another text</p>
+        </Modal>
     </div>
   );
 }
